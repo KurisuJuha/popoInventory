@@ -13,7 +13,7 @@ namespace JuhaKurisu.PopoTools.InventorySystem
         public int amount
         {
             get => _amount;
-            set => _amount = Math.Clamp(value, 0, maxAmount);
+            private set => _amount = Math.Clamp(value, 0, maxAmount);
         }
         int _amount;
         public int maxAmount => setting.getMaxAmount.Invoke(item);
