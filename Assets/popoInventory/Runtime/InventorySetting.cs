@@ -12,5 +12,7 @@ namespace JuhaKurisu.PopoTools.InventorySystem
             this.getMaxAmount = getMaxAmount;
             this.getEmptyItem = getEmptyItem;
         }
+
+        public Grid<ItemType> CreateEmptyGrid() => new Grid<ItemType>(this);
     }
 }

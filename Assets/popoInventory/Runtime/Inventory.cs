@@ -14,7 +14,7 @@ namespace JuhaKurisu.PopoTools.InventorySystem
             _grids = new Grid<ItemType>[size];
             this.setting = setting;
 
-            for (int i = 0; i < size; i++) _grids[i] = new Grid<ItemType>(setting);
+            for (int i = 0; i < size; i++) _grids[i] = setting.CreateEmptyGrid();
         }
     }
 }
