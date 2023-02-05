@@ -27,5 +27,16 @@ namespace JuhaKurisu.PopoTools.InventorySystem
             this.getMaxAmount = getMaxAmount;
             this.getEmptyItem = getEmptyItem;
         }
+
+        public void AddAll(Grid<ItemType> otherGrid)
+        {
+            bool isSameItem = item.Equals(otherGrid.item);
+
+            if (!(isSameItem || amount == 0)) return;
+
+            int p = Math.Clamp(otherGrid.amount, 0, maxAmount - amount);
+            amount += p;
+            otherGrid.amount -= p;
+        }
     }
 }
