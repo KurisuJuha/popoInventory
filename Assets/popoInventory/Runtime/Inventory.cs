@@ -7,17 +7,14 @@ namespace JuhaKurisu.PopoTools.InventorySystem
     {
         public ReadOnlyCollection<Grid<ItemType>> grids => Array.AsReadOnly(_grids);
         readonly Grid<ItemType>[] _grids;
-        event Func<ItemType, int> getMaxAmount;
-        event Func<ItemType> getEmptyItem;
+        readonly InventorySetting<ItemType> setting;
 
-        public Inventory(int size, Func<ItemType, int> getMaxAmount, Func<ItemType> getEmptyItem)
+        public Inventory(int size, InventorySetting<ItemType> setting)
         {
             _grids = new Grid<ItemType>[size];
-            this.getMaxAmount = getMaxAmount;
-            this.getEmptyItem = getEmptyItem;
+            this.setting = setting;
 
-
-            for (int i = 0; i < size; i++) _grids[i] = new Grid<ItemType>(getEmptyItem.Invoke(), getMaxAmount, getEmptyItem);
+            for (int i = 0; i < size; i++) _grids[i] = new Grid<ItemType>(setting);
         }
     }
 }

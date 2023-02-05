@@ -6,7 +6,7 @@ namespace JuhaKurisu.PopoTools.InventorySystem
     {
         public ItemType item
         {
-            get => amount > 0 ? _item : getEmptyItem.Invoke();
+            get => amount > 0 ? _item : setting.getEmptyItem.Invoke();
             private set => _item = value;
         }
         ItemType _item;
@@ -16,16 +16,21 @@ namespace JuhaKurisu.PopoTools.InventorySystem
             set => _amount = Math.Clamp(value, 0, maxAmount);
         }
         int _amount;
-        public int maxAmount => getMaxAmount.Invoke(item);
-        event Func<ItemType, int> getMaxAmount;
-        event Func<ItemType> getEmptyItem;
+        public int maxAmount => setting.getMaxAmount.Invoke(item);
+        public readonly InventorySetting<ItemType> setting;
 
-        public Grid(ItemType item, Func<ItemType, int> getMaxAmount, Func<ItemType> getEmptyItem)
+        public Grid(InventorySetting<ItemType> setting)
+        {
+            this.item = setting.getEmptyItem();
+            amount = 0;
+            this.setting = setting;
+        }
+
+        public Grid(ItemType item, InventorySetting<ItemType> setting)
         {
             this.item = item;
             amount = 0;
-            this.getMaxAmount = getMaxAmount;
-            this.getEmptyItem = getEmptyItem;
+            this.setting = setting;
         }
 
         public void AddAll(Grid<ItemType> otherGrid)
