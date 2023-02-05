@@ -14,5 +14,7 @@ namespace JuhaKurisu.PopoTools.InventorySystem
         }
 
         public Grid<ItemType> CreateEmptyGrid() => new Grid<ItemType>(this);
+
+        public Inventory<ItemType> CreateInventory(int size) => new Inventory<ItemType>(size, this);
     }
 }
