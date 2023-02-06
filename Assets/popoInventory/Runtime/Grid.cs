@@ -1,36 +1,40 @@
 using System;
+using UnityEngine;
 
 namespace JuhaKurisu.PopoTools.InventorySystem
 {
+    [Serializable]
     public class Grid<ItemType>
     {
+        [SerializeField] private ItemType _item;
+        [SerializeField] private int _amount;
+        private InventorySetting<ItemType> _setting;
+
         public ItemType item
         {
-            get => amount > 0 ? _item : setting.getEmptyItem.Invoke();
+            get => amount > 0 ? _item : _setting.getEmptyItem.Invoke();
             private set => _item = value;
         }
-        ItemType _item;
         public int amount
         {
             get => _amount;
             private set => _amount = Math.Clamp(value, 0, maxAmount);
         }
-        int _amount;
-        public int maxAmount => setting.getMaxAmount.Invoke(item);
-        public readonly InventorySetting<ItemType> setting;
+        public int maxAmount => _setting.getMaxAmount.Invoke(item);
+        public InventorySetting<ItemType> setting => _setting;
 
         public Grid(InventorySetting<ItemType> setting)
         {
             this.item = setting.getEmptyItem();
+            this._setting = setting;
             amount = 0;
-            this.setting = setting;
         }
 
         public Grid(ItemType item, InventorySetting<ItemType> setting)
         {
             this.item = item;
+            this._setting = setting;
             amount = 0;
-            this.setting = setting;
         }
 
         public void AddAll(Grid<ItemType> otherGrid)
