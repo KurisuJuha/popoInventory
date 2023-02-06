@@ -2,6 +2,7 @@ using System;
 
 namespace JuhaKurisu.PopoTools.InventorySystem
 {
+    [Serializable]
     public class InventorySetting<ItemType>
     {
         public Func<ItemType, int> getMaxAmount { get; private set; }
