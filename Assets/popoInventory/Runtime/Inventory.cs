@@ -1,13 +1,15 @@
 using System;
 using System.Collections.ObjectModel;
+using UnityEngine;
 
 namespace JuhaKurisu.PopoTools.InventorySystem
 {
+    [Serializable]
     public class Inventory<ItemType>
     {
         public ReadOnlyCollection<Grid<ItemType>> grids => Array.AsReadOnly(_grids);
-        readonly Grid<ItemType>[] _grids;
-        readonly InventorySetting<ItemType> setting;
+        [SerializeField] private Grid<ItemType>[] _grids;
+        private InventorySetting<ItemType> setting;
 
         public Inventory(int size, InventorySetting<ItemType> setting)
         {
