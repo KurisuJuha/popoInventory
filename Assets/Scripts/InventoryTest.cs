@@ -18,10 +18,15 @@ public class InventoryTest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        inventory = new Inventory<string>(9, new InventorySetting<string>(
+        InventorySetting<string> setting = new InventorySetting<string>(
             s => s.Length,
             () => ""
-        ));
+        );
+        inventory = new Inventory<string>(9, setting);
+        for (int i = 0; i < 9; i++)
+        {
+            inventory.grids[i].AddAll(setting.CreateGrid("popoInventory"[0..i]));
+        }
     }
 
     // Update is called once per frame

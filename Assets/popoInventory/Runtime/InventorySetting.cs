@@ -2,7 +2,6 @@ using System;
 
 namespace JuhaKurisu.PopoTools.InventorySystem
 {
-    [Serializable]
     public class InventorySetting<ItemType>
     {
         public Func<ItemType, int> getMaxAmount { get; private set; }
@@ -15,6 +14,7 @@ namespace JuhaKurisu.PopoTools.InventorySystem
         }
 
         public Grid<ItemType> CreateEmptyGrid() => new Grid<ItemType>(this);
+        public Grid<ItemType> CreateGrid(ItemType item) => new Grid<ItemType>(item, this);
 
         public Inventory<ItemType> CreateInventory(int size) => new Inventory<ItemType>(size, this);
     }

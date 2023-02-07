@@ -236,6 +236,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff0068096384cc4b8fe744d1f7a9c16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventory:
+    _grids: []
+  obj1:
+    rid: -2
+  testClass2:
+    hoge: 
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!4 &2094194545
 Transform:
   m_ObjectHideFlags: 0
