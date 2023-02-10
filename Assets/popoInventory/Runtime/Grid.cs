@@ -66,6 +66,21 @@ namespace JuhaKurisu.PopoTools.InventorySystem
             otherGrid.MaintainConsistency();
         }
 
+        public void Add(Grid<ItemType> otherGrid, int addAmount)
+        {
+            bool isSameItem = item.Equals(otherGrid.item);
+
+            if (!(isSameItem || addAmount == 0)) return;
+
+            int p = Math.Clamp(addAmount, 0, setting.getMaxAmount.Invoke(otherGrid.item) - amount);
+            _amount += p;
+            otherGrid._amount -= p;
+            _item = otherGrid.item;
+
+            MaintainConsistency();
+            otherGrid.MaintainConsistency();
+        }
+
         public void MaintainConsistency()
         {
             // 数が0ならemptyアイテムに
