@@ -19,7 +19,7 @@ public class InventoryTest : MonoBehaviour
     void Start()
     {
         InventorySetting<string> setting = new InventorySetting<string>(
-            s => s.Length,
+            s => 100,
             () => ""
         );
         inventory = new Inventory<string>(9, setting);
@@ -27,6 +27,10 @@ public class InventoryTest : MonoBehaviour
         {
             inventory.grids[i].Add(setting.CreateGrid("popoInventory"[0..i]), 10);
         }
+        if (inventory.TryAddItem(setting.CreateGrid("popo")))
+            Debug.Log("popo");
+        if (inventory.TryAddItem(setting.CreateGrid("popoInventory")))
+            Debug.Log("popoInventory");
     }
 
     // Update is called once per frame
