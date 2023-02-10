@@ -18,5 +18,25 @@ namespace JuhaKurisu.PopoTools.InventorySystem
 
             for (int i = 0; i < size; i++) _grids[i] = setting.CreateEmptyGrid();
         }
+
+        public bool TryAddItem(Grid<ItemType> grid)
+        {
+            // 同じアイテムに出来るだけ入れてみる
+            foreach (var inventoryGrid in grids)
+            {
+                // 同じアイテムなら入れる
+                if (inventoryGrid.item.Equals(grid.item))
+                    inventoryGrid.AddAll(grid);
+            }
+            // 空のgridに入れる
+            foreach (var inventoryGrid in grids)
+            {
+                // 空のgridなら入れる
+                if (inventoryGrid.item.Equals(setting.getEmptyItem()))
+                    inventoryGrid.AddAll(grid);
+            }
+
+            return grid.amount == 0;
+        }
     }
 }
