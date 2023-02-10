@@ -25,7 +25,7 @@ public class InventoryTest : MonoBehaviour
         inventory = new Inventory<string>(9, setting);
         for (int i = 0; i < 9; i++)
         {
-            inventory.grids[i].AddAll(setting.CreateGrid("popoInventory"[0..i]));
+            inventory.grids[i].Add(setting.CreateGrid("popoInventory"[0..i]), 10);
         }
     }
 
