@@ -55,7 +55,7 @@ namespace JuhaKurisu.PopoTools.InventorySystem
         {
             bool isSameItem = item.Equals(otherGrid.item);
 
-            if (!(isSameItem || amount == 0)) return;
+            if (!isSameItem && amount != 0) return;
 
             int p = Math.Clamp(otherGrid.amount, 0, setting.getMaxAmount.Invoke(otherGrid.item) - amount);
             _amount += p;
@@ -70,7 +70,7 @@ namespace JuhaKurisu.PopoTools.InventorySystem
         {
             bool isSameItem = item.Equals(otherGrid.item);
 
-            if (!(isSameItem || addAmount == 0)) return;
+            if (!isSameItem && amount != 0) return;
 
             int p = Math.Clamp(addAmount, 0, setting.getMaxAmount.Invoke(otherGrid.item) - amount);
             _amount += p;
