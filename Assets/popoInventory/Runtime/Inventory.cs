@@ -9,9 +9,9 @@ namespace JuhaKurisu.PopoTools.InventorySystem
     {
         public ReadOnlyCollection<Grid<ItemType>> grids => Array.AsReadOnly(_grids);
         [SerializeField] private Grid<ItemType>[] _grids;
-        private InventorySetting<ItemType> setting;
+        private InventorySettings<ItemType> setting;
 
-        public Inventory(int size, InventorySetting<ItemType> setting)
+        public Inventory(int size, InventorySettings<ItemType> setting)
         {
             _grids = new Grid<ItemType>[size];
             this.setting = setting;

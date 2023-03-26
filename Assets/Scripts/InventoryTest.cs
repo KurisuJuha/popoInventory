@@ -18,7 +18,7 @@ public class InventoryTest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        InventorySetting<string> setting = new InventorySetting<string>(
+        InventorySettings<string> setting = new InventorySettings<string>(
             s => 100,
             () => ""
         );

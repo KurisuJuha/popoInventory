@@ -8,34 +8,25 @@ namespace JuhaKurisu.PopoTools.InventorySystem
     {
         [SerializeField] private ItemType _item;
         [SerializeField] private int _amount;
-        private InventorySetting<ItemType> _setting;
+        private InventorySettings<ItemType> _settings;
 
         public ItemType item => _item;
         public int amount => _amount;
 
-        public InventorySetting<ItemType> setting => _setting;
+        public InventorySettings<ItemType> settings => _settings;
 
-        public Grid(InventorySetting<ItemType> setting)
+        public Grid(InventorySettings<ItemType> settings)
         {
-            this._setting = setting;
-            this._item = setting.getEmptyItem();
+            this._settings = settings;
+            this._item = settings.getEmptyItem();
             this._amount = 0;
 
             MaintainConsistency();
         }
 
-        public Grid(ItemType item, InventorySetting<ItemType> setting)
+        public Grid(ItemType item, int amount, InventorySettings<ItemType> settings)
         {
-            this._setting = setting;
-            this._item = item;
-            this._amount = 1;
-
-            MaintainConsistency();
-        }
-
-        public Grid(ItemType item, InventorySetting<ItemType> setting, int amount)
-        {
-            this._setting = setting;
+            this._settings = settings;
             this._item = item;
             this._amount = amount;
 
@@ -43,8 +34,9 @@ namespace JuhaKurisu.PopoTools.InventorySystem
         }
 
         public Grid(ItemType item, InventorySetting<ItemType> setting, bool toMaximize)
+        public Grid(ItemType item, InventorySettings<ItemType> setting, bool toMaximize = false)
         {
-            this._setting = setting;
+            this._settings = setting;
             this._item = item;
             this._amount = toMaximize ? setting.getMaxAmount(item) : 1;
 
@@ -57,7 +49,7 @@ namespace JuhaKurisu.PopoTools.InventorySystem
 
             if (!isSameItem && amount != 0) return;
 
-            int p = Math.Clamp(otherGrid.amount, 0, setting.getMaxAmount.Invoke(otherGrid.item) - amount);
+            int p = Math.Clamp(otherGrid.amount, 0, settings.getMaxAmount.Invoke(otherGrid.item) - amount);
             _amount += p;
             otherGrid._amount -= p;
             _item = otherGrid.item;
@@ -72,7 +64,7 @@ namespace JuhaKurisu.PopoTools.InventorySystem
 
             if (!isSameItem && amount != 0) return;
 
-            int p = Math.Clamp(addAmount, 0, setting.getMaxAmount.Invoke(otherGrid.item) - amount);
+            int p = Math.Clamp(addAmount, 0, settings.getMaxAmount.Invoke(otherGrid.item) - amount);
             _amount += p;
             otherGrid._amount -= p;
             _item = otherGrid.item;
@@ -93,13 +85,13 @@ namespace JuhaKurisu.PopoTools.InventorySystem
         public void MaintainConsistency()
         {
             // 数が0ならemptyアイテムに
-            if (amount <= 0) _item = setting.getEmptyItem();
+            if (amount <= 0) _item = settings.getEmptyItem();
 
             // 数が0以下なら0に
             if (amount <= 0) _amount = 0;
 
             // 数が最大値よりも大きいなら最大値に
-            int maxAmount = setting.getMaxAmount(item);
+            int maxAmount = settings.getMaxAmount(item);
             if (amount > maxAmount) _amount = maxAmount;
         }
     }
