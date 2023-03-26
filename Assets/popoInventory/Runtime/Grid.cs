@@ -10,11 +10,25 @@ namespace JuhaKurisu.PopoTools.InventorySystem
         [SerializeField] private int _amount;
         private InventorySettings<ItemType> _settings;
 
+        /// <summary>
+        /// 中身のItem
+        /// </summary>
         public ItemType item => _item;
+
+        /// <summary>
+        /// 個数
+        /// </summary>
         public int amount => _amount;
 
+        /// <summary>
+        /// 参考にするSettings
+        /// </summary>
         public InventorySettings<ItemType> settings => _settings;
 
+        /// <summary>
+        /// settingsをもとに空のGridを生成する
+        /// </summary>
+        /// <param name="settings">参考にするsettings</param>
         public Grid(InventorySettings<ItemType> settings)
         {
             this._settings = settings;
@@ -24,6 +38,12 @@ namespace JuhaKurisu.PopoTools.InventorySystem
             MaintainConsistency();
         }
 
+        /// <summary>
+        /// 指定されたアイテムと個数でGridを生成する
+        /// </summary>
+        /// <param name="item">Gridの中身のItem</param>
+        /// <param name="amount">個数</param>
+        /// <param name="settings">参考にするSettings</param>
         public Grid(ItemType item, int amount, InventorySettings<ItemType> settings)
         {
             this._settings = settings;
@@ -33,7 +53,12 @@ namespace JuhaKurisu.PopoTools.InventorySystem
             MaintainConsistency();
         }
 
-        public Grid(ItemType item, InventorySetting<ItemType> setting, bool toMaximize)
+        /// <summary>
+        /// 指定されたアイテムをもとにGridを生成する
+        /// </summary>
+        /// <param name="item">Gridの中身のItem</param>
+        /// <param name="setting">参考にするSettings</param>
+        /// <param name="toMaximize">個数を上限いっぱいにするかどうか</param>
         public Grid(ItemType item, InventorySettings<ItemType> setting, bool toMaximize = false)
         {
             this._settings = setting;
@@ -43,6 +68,10 @@ namespace JuhaKurisu.PopoTools.InventorySystem
             MaintainConsistency();
         }
 
+        /// <summary>
+        /// このGridにアイテムを可能な限り全て追加する。
+        /// </summary>
+        /// <param name="otherGrid">追加するアイテムの供給元</param>
         public void AddAll(Grid<ItemType> otherGrid)
         {
             bool isSameItem = item.Equals(otherGrid.item);
@@ -58,6 +87,11 @@ namespace JuhaKurisu.PopoTools.InventorySystem
             otherGrid.MaintainConsistency();
         }
 
+        /// <summary>
+        /// このGridにアイテムを追加する。
+        /// </summary>
+        /// <param name="otherGrid">追加するアイテムの供給元</param>
+        /// <param name="addAmount">追加する数</param>
         public void Add(Grid<ItemType> otherGrid, int addAmount)
         {
             bool isSameItem = item.Equals(otherGrid.item);
@@ -73,6 +107,10 @@ namespace JuhaKurisu.PopoTools.InventorySystem
             otherGrid.MaintainConsistency();
         }
 
+        /// <summary>
+        /// このGridの中身を交換する
+        /// </summary>
+        /// <param name="otherGrid">中身の交換対象</param>
         public void Exchange(Grid<ItemType> otherGrid)
         {
             _item = otherGrid._item;
@@ -82,6 +120,9 @@ namespace JuhaKurisu.PopoTools.InventorySystem
             otherGrid.MaintainConsistency();
         }
 
+        /// <summary>
+        /// 整合性をチェックする
+        /// </summary>
         public void MaintainConsistency()
         {
             // 数が0ならemptyアイテムに
