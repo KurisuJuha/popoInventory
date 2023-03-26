@@ -113,8 +113,8 @@ namespace JuhaKurisu.PopoTools.InventorySystem
         /// <param name="otherGrid">中身の交換対象</param>
         public void Exchange(Grid<ItemType> otherGrid)
         {
-            _item = otherGrid._item;
-            _amount = otherGrid._amount;
+            (_item, otherGrid._item) = (otherGrid._item, _item);
+            (_amount, otherGrid._amount) = (otherGrid._amount, _amount);
 
             MaintainConsistency();
             otherGrid.MaintainConsistency();
