@@ -81,6 +81,15 @@ namespace JuhaKurisu.PopoTools.InventorySystem
             otherGrid.MaintainConsistency();
         }
 
+        public void Exchange(Grid<ItemType> otherGrid)
+        {
+            _item = otherGrid._item;
+            _amount = otherGrid._amount;
+
+            MaintainConsistency();
+            otherGrid.MaintainConsistency();
+        }
+
         public void MaintainConsistency()
         {
             // 数が0ならemptyアイテムに
