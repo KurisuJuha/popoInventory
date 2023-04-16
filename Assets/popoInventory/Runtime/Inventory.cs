@@ -7,19 +7,19 @@ namespace JuhaKurisu.PopoTools.InventorySystem
     [Serializable]
     public class Inventory<ItemType>
     {
-        public ReadOnlyCollection<Grid<ItemType>> grids => Array.AsReadOnly(_grids);
-        [SerializeField] private Grid<ItemType>[] _grids;
+        public ReadOnlyCollection<InventoryGrid<ItemType>> grids => Array.AsReadOnly(_grids);
+        [SerializeField] private InventoryGrid<ItemType>[] _grids;
         private InventorySettings<ItemType> setting;
 
         public Inventory(int size, InventorySettings<ItemType> setting)
         {
-            _grids = new Grid<ItemType>[size];
+            _grids = new InventoryGrid<ItemType>[size];
             this.setting = setting;
 
             for (int i = 0; i < size; i++) _grids[i] = setting.CreateEmptyGrid();
         }
 
-        public bool TryAddItem(Grid<ItemType> grid)
+        public bool TryAddItem(InventoryGrid<ItemType> grid)
         {
             // 同じアイテムに出来るだけ入れてみる
             foreach (var inventoryGrid in grids)
