@@ -20,7 +20,8 @@ public class InventoryTest : MonoBehaviour
     {
         InventorySettings<string> setting = new InventorySettings<string>(
             s => 100,
-            () => ""
+            () => "",
+            g => g
         );
         inventory = new Inventory<string>(9, setting);
         for (int i = 0; i < 9; i++)

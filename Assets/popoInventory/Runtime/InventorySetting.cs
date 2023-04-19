@@ -4,13 +4,15 @@ namespace JuhaKurisu.PopoTools.InventorySystem
 {
     public class InventorySettings<ItemType>
     {
-        public Func<ItemType, int> getMaxAmount { get; private set; }
-        public Func<ItemType> getEmptyItem { get; private set; }
+        public readonly Func<ItemType, int> getMaxAmount;
+        public readonly Func<ItemType> getEmptyItem;
+        public readonly Func<ItemType, ItemType> copyItem;
 
-        public InventorySettings(Func<ItemType, int> getMaxAmount, Func<ItemType> getEmptyItem)
+        public InventorySettings(Func<ItemType, int> getMaxAmount, Func<ItemType> getEmptyItem, Func<ItemType, ItemType> copyItem)
         {
             this.getMaxAmount = getMaxAmount;
             this.getEmptyItem = getEmptyItem;
+            this.copyItem = copyItem;
         }
 
         public InventoryGrid<ItemType> CreateEmptyGrid() => new InventoryGrid<ItemType>(this);

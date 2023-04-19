@@ -68,6 +68,13 @@ namespace JuhaKurisu.PopoTools.InventorySystem
             MaintainConsistency();
         }
 
+        public InventoryGrid(InventoryGrid<ItemType> sourceGrid)
+        {
+            this._settings = sourceGrid.settings;
+            this._item = settings.copyItem.Invoke(sourceGrid._item);
+            this._amount = sourceGrid.amount;
+        }
+
         /// <summary>
         /// このGridにアイテムを可能な限り全て追加する。
         /// </summary>
