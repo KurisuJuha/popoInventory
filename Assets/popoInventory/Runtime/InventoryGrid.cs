@@ -1,146 +1,97 @@
-using System;
 using UnityEngine;
 
 namespace JuhaKurisu.PopoTools.InventorySystem
 {
-    [Serializable]
-    public class InventoryGrid<ItemType>
+    public class InventoryGrid<ItemType> : IInventoryGrid<ItemType>
     {
-        [SerializeField] private ItemType _item;
-        [SerializeField] private int _amount;
-        private InventorySettings<ItemType> _settings;
+        public readonly IInventorySettings<ItemType> inventorySettings;
+        public InventoryItem<ItemType> inventoryItem { get; private set; }
+        public int amount { get; private set; }
+        public readonly int gridMaxAmount;
+        public int itemMaxAmount => inventorySettings.ItemMaxAmount(inventoryItem.item);
+        public int maxAmount => Mathf.Min(gridMaxAmount, itemMaxAmount);
 
-        /// <summary>
-        /// 中身のItem
-        /// </summary>
-        public ItemType item => _item;
-
-        /// <summary>
-        /// 個数
-        /// </summary>
-        public int amount => _amount;
-
-        /// <summary>
-        /// 参考にするSettings
-        /// </summary>
-        public InventorySettings<ItemType> settings => _settings;
-
-        /// <summary>
-        /// settingsをもとに空のGridを生成する
-        /// </summary>
-        /// <param name="settings">参考にするsettings</param>
-        public InventoryGrid(InventorySettings<ItemType> settings)
+        public InventoryGrid(int gridMaxAmount, IInventorySettings<ItemType> inventorySettings, InventoryItem<ItemType> inventoryItem)
         {
-            this._settings = settings;
-            this._item = settings.getEmptyItem();
-            this._amount = 0;
+            this.gridMaxAmount = gridMaxAmount;
+            this.inventorySettings = inventorySettings;
+            this.inventoryItem = inventoryItem;
+        }
 
-            MaintainConsistency();
+        public InventoryGrid(int gridMaxAmount, IInventorySettings<ItemType> inventorySettings)
+        {
+            this.gridMaxAmount = gridMaxAmount;
+            this.inventorySettings = inventorySettings;
+            this.inventoryItem = new InventoryItem<ItemType>(
+                inventorySettings,
+                this.inventorySettings.GenerateEmptyItem()
+            );
         }
 
         /// <summary>
-        /// 指定されたアイテムと個数でGridを生成する
+        /// グリッドにアイテムを足す
         /// </summary>
-        /// <param name="item">Gridの中身のItem</param>
-        /// <param name="amount">個数</param>
-        /// <param name="settings">参考にするSettings</param>
-        public InventoryGrid(ItemType item, int amount, InventorySettings<ItemType> settings)
+        /// <param name="addAmount">足す数</param>
+        /// <returns>足せなかった数</returns>
+        public int AddItems(int addAmount)
         {
-            this._settings = settings;
-            this._item = item;
-            this._amount = amount;
+            // 許容値
+            int limit = gridMaxAmount - addAmount;
 
-            MaintainConsistency();
+            if (addAmount > limit)
+            {
+                // 足す方が大きい場合
+                amount = maxAmount;
+                MaintainConsistency();
+                return addAmount - limit;
+            }
+            else
+            {
+                // 許容値の方が大きい場合
+                amount += limit;
+                MaintainConsistency();
+                return limit - addAmount;
+            }
         }
 
         /// <summary>
-        /// 指定されたアイテムをもとにGridを生成する
+        /// グリッドからアイテムを引く
         /// </summary>
-        /// <param name="item">Gridの中身のItem</param>
-        /// <param name="setting">参考にするSettings</param>
-        /// <param name="toMaximize">個数を上限いっぱいにするかどうか</param>
-        public InventoryGrid(ItemType item, InventorySettings<ItemType> setting, bool toMaximize = false)
+        /// <param name="subtractAmount">引く数</param>
+        /// <returns>引けなかった数</returns>
+        public int SubtractItems(int subtractAmount)
         {
-            this._settings = setting;
-            this._item = item;
-            this._amount = toMaximize ? setting.getMaxAmount(item) : 1;
-
-            MaintainConsistency();
+            if (amount < subtractAmount)
+            {
+                int ret = subtractAmount - amount;
+                amount = 0;
+                MaintainConsistency();
+                return ret;
+            }
+            else
+            {
+                amount -= subtractAmount;
+                MaintainConsistency();
+                return 0;
+            }
         }
 
-        public InventoryGrid(InventoryGrid<ItemType> sourceGrid)
-        {
-            this._settings = sourceGrid.settings;
-            this._item = settings.copyItem.Invoke(sourceGrid._item);
-            this._amount = sourceGrid.amount;
-        }
-
-        /// <summary>
-        /// このGridにアイテムを可能な限り全て追加する。
-        /// </summary>
-        /// <param name="otherGrid">追加するアイテムの供給元</param>
-        public void AddAll(InventoryGrid<ItemType> otherGrid)
-        {
-            bool isSameItem = item.Equals(otherGrid.item);
-
-            if (!isSameItem && amount != 0) return;
-
-            int p = Math.Clamp(otherGrid.amount, 0, settings.getMaxAmount.Invoke(otherGrid.item) - amount);
-            _amount += p;
-            otherGrid._amount -= p;
-            _item = otherGrid.item;
-
-            MaintainConsistency();
-            otherGrid.MaintainConsistency();
-        }
-
-        /// <summary>
-        /// このGridにアイテムを追加する。
-        /// </summary>
-        /// <param name="otherGrid">追加するアイテムの供給元</param>
-        /// <param name="addAmount">追加する数</param>
-        public void Add(InventoryGrid<ItemType> otherGrid, int addAmount)
-        {
-            bool isSameItem = item.Equals(otherGrid.item);
-
-            if (!isSameItem && amount != 0) return;
-
-            int p = Math.Clamp(addAmount, 0, settings.getMaxAmount.Invoke(otherGrid.item) - amount);
-            _amount += p;
-            otherGrid._amount -= p;
-            _item = otherGrid.item;
-
-            MaintainConsistency();
-            otherGrid.MaintainConsistency();
-        }
-
-        /// <summary>
-        /// このGridの中身を交換する
-        /// </summary>
-        /// <param name="otherGrid">中身の交換対象</param>
-        public void Exchange(InventoryGrid<ItemType> otherGrid)
-        {
-            (_item, otherGrid._item) = (otherGrid._item, _item);
-            (_amount, otherGrid._amount) = (otherGrid._amount, _amount);
-
-            MaintainConsistency();
-            otherGrid.MaintainConsistency();
-        }
-
-        /// <summary>
-        /// 整合性をチェックする
-        /// </summary>
         public void MaintainConsistency()
         {
-            // 数が0ならemptyアイテムに
-            if (amount <= 0) _item = settings.getEmptyItem();
+            // 数が0より小さい、もしくは同じ場合Defaultにする
+            if (amount <= 0)
+            {
+                inventoryItem = new InventoryItem<ItemType>(
+                    inventorySettings,
+                    inventorySettings.GenerateEmptyItem()
+                );
+            }
 
-            // 数が0以下なら0に
-            if (amount <= 0) _amount = 0;
-
-            // 数が最大値よりも大きいなら最大値に
-            int maxAmount = settings.getMaxAmount(item);
-            if (amount > maxAmount) _amount = maxAmount;
+            // デフォルトアイテムなら数を0に
+            if (inventorySettings.IsEmptyItem(inventoryItem.item))
+            {
+                amount = 0;
+            }
         }
     }
 }
