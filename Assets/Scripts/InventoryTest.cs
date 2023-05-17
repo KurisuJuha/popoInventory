@@ -1,66 +1,27 @@
-using UnityEngine;
 using JuhaKurisu.PopoTools.InventorySystem;
+using JuhaKurisu.PopoTools.InventorySystem.Extentions;
+using UnityEngine;
 
 public class InventoryTest : MonoBehaviour
 {
-    public Inventory<string> inventory;
+    private InventoryGrid<string> grid;
 
-    [SerializeReference] ITestInterface obj1;
-    [SerializeField] TestClass testClass;
-    [SerializeField] TestClass2 testClass2;
-
-    private void Reset()
+    private void Start()
     {
-        testClass = new TestClass();
-        obj1 = testClass;
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        InventorySettings<string> setting = new InventorySettings<string>(
-            s => 100,
-            () => "",
-            g => g
+        var settings = new InventorySettings<string>(
+            item => item,
+            (itemA, itemB) => itemA == itemB,
+            item => item == "",
+            item => 100,
+            () => ""
         );
-        inventory = new Inventory<string>(9, setting);
-        for (int i = 0; i < 9; i++)
-        {
-            inventory.grids[i].Add(setting.CreateGrid("popoInventory"[0..i]), 10);
-        }
-        if (inventory.TryAddItem(setting.CreateGrid("popo")))
-            Debug.Log("popo");
-        if (inventory.TryAddItem(setting.CreateGrid("popoInventory")))
-            Debug.Log("popoInventory");
+        grid = new InventoryGrid<string>(50, settings);
+        grid.SetItems("popo", 30);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.Space)) grid.SubtractItem();
+        Debug.Log(grid.amount);
     }
-}
-
-public interface ITestInterface { }
-
-public class TestClass : ITestInterface, ISerializationCallbackReceiver
-{
-    public string hoge;
-
-    public void OnAfterDeserialize()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnBeforeSerialize()
-    {
-        throw new System.NotImplementedException();
-    }
-}
-
-[System.Serializable]
-public class TestClass2
-{
-    [SerializeField]
-    private string hoge;
 }

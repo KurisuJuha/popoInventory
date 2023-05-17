@@ -38,7 +38,10 @@ namespace JuhaKurisu.PopoTools.InventorySystem
         public int AddItems(int addAmount)
         {
             // 許容値
-            var limit = gridMaxAmount - addAmount;
+            var limit = maxAmount - amount;
+            Debug.Log($"maxAmount : {maxAmount}");
+            Debug.Log($"limit : {limit}");
+            Debug.Log($"addAmount : {addAmount}");
 
             if (addAmount > limit)
             {
@@ -49,9 +52,10 @@ namespace JuhaKurisu.PopoTools.InventorySystem
             }
 
             // 許容値の方が大きい場合
-            amount += limit;
+            amount += addAmount;
             MaintainConsistency();
-            return limit - addAmount;
+            Debug.Log(amount);
+            return 0;
         }
 
         /// <summary>
@@ -74,37 +78,30 @@ namespace JuhaKurisu.PopoTools.InventorySystem
             return 0;
         }
 
-        public int AddItem()
+        public void SetItems(TItem item, int itemAmount)
         {
-            return AddItems(1);
-        }
-
-        public int SubtractItem()
-        {
-            return SubtractItems(1);
-        }
-
-        public bool TryAddItem()
-        {
-            return AddItems(1) == 0;
-        }
-
-        public bool TrySubtractItem()
-        {
-            return SubtractItems(1) == 0;
+            inventoryItem = new InventoryItem<TItem>(inventorySettings, item);
+            amount = itemAmount;
+            MaintainConsistency();
         }
 
         public void MaintainConsistency()
         {
-            // 数が0より小さい、もしくは同じ場合Defaultにする
+            // 量が0より小さい、もしくは同じ場合Defaultにする
             if (amount <= 0)
+            {
                 inventoryItem = new InventoryItem<TItem>(
                     inventorySettings,
                     inventorySettings.GenerateEmptyItem()
                 );
+                amount = 0;
+            }
 
             // デフォルトアイテムなら数を0に
             if (inventorySettings.IsEmptyItem(inventoryItem.item)) amount = 0;
+
+            // 量が0より大きい場合は量をmaxAmountにする
+            if (amount > maxAmount) amount = maxAmount;
         }
     }
 }
