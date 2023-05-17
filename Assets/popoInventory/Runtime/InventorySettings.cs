@@ -2,7 +2,7 @@ namespace JuhaKurisu.PopoTools.InventorySystem
 {
     public class InventorySettings<TItem> : IInventorySettings<TItem>
     {
-        public delegate TItem CopyItemCallback();
+        public delegate TItem CopyItemCallback(TItem item);
 
         public delegate TItem GenerateEmptyItemCallback();
 
@@ -29,11 +29,6 @@ namespace JuhaKurisu.PopoTools.InventorySystem
             this.generateEmptyItem = generateEmptyItem;
         }
 
-        public TItem CopyItem()
-        {
-            return copyItem.Invoke();
-        }
-
         public bool IsSameItem(TItem itemA, TItem itemB)
         {
             return isSameItem.Invoke(itemA, itemB);
@@ -52,6 +47,11 @@ namespace JuhaKurisu.PopoTools.InventorySystem
         public TItem GenerateEmptyItem()
         {
             return generateEmptyItem.Invoke();
+        }
+
+        public TItem CopyItem(TItem item)
+        {
+            return copyItem.Invoke(item);
         }
     }
 }
