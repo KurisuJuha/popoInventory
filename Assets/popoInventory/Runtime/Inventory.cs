@@ -1,10 +1,10 @@
 namespace JuhaKurisu.PopoTools.InventorySystem
 {
-    public class Inventory<ItemType> : IInventory<ItemType>
+    public class Inventory<TItem> : IInventory<TItem>
     {
-        public readonly IInventorySettings<ItemType> inventorySettings;
+        public readonly IInventorySettings<TItem> inventorySettings;
 
-        public Inventory(IInventorySettings<ItemType> inventorySettings)
+        public Inventory(IInventorySettings<TItem> inventorySettings)
         {
             this.inventorySettings = inventorySettings;
         }

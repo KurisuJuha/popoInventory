@@ -1,15 +1,11 @@
 namespace JuhaKurisu.PopoTools.InventorySystem
 {
-    public interface IInventorySettings<ItemType>
+    public interface IInventorySettings<TItem>
     {
-        public ItemType CopyItem();
-
-        public bool IsSameItem(ItemType itemA, ItemType itemB);
-
-        public bool IsEmptyItem(ItemType item);
-
-        public int ItemMaxAmount(ItemType item);
-
-        public ItemType GenerateEmptyItem();
+        TItem CopyItem();
+        bool IsSameItem(TItem itemA, TItem itemB);
+        bool IsEmptyItem(TItem item);
+        int ItemMaxAmount(TItem item);
+        TItem GenerateEmptyItem();
     }
 }

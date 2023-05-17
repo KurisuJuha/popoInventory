@@ -1,13 +1,11 @@
 namespace JuhaKurisu.PopoTools.InventorySystem
 {
-    public interface IInventoryGrid<ItemType>
+    public interface IInventoryGrid<TItem>
     {
-        public InventoryItem<ItemType> inventoryItem { get; }
-        public int amount { get; }
-        public int maxAmount { get; }
-
-        public int AddItems(int addAmount);
-
-        public int SubtractItems(int subtractAmount);
+        InventoryItem<TItem> inventoryItem { get; }
+        int amount { get; }
+        int maxAmount { get; }
+        int AddItems(int addAmount);
+        int SubtractItems(int subtractAmount);
     }
 }

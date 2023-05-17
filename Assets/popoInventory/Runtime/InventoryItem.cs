@@ -1,17 +1,19 @@
 namespace JuhaKurisu.PopoTools.InventorySystem
 {
-    public class InventoryItem<ItemType>
+    public class InventoryItem<TItem>
     {
-        public readonly IInventorySettings<ItemType> inventorySettings;
-        public readonly ItemType item;
+        public readonly IInventorySettings<TItem> inventorySettings;
+        public readonly TItem item;
 
-        public InventoryItem(IInventorySettings<ItemType> inventorySettings, ItemType item)
+        public InventoryItem(IInventorySettings<TItem> inventorySettings, TItem item)
         {
             this.inventorySettings = inventorySettings;
             this.item = item;
         }
 
-        public InventoryItem<ItemType> Copy()
-            => new InventoryItem<ItemType>(inventorySettings, item);
+        public InventoryItem<TItem> Copy()
+        {
+            return new InventoryItem<TItem>(inventorySettings, item);
+        }
     }
 }

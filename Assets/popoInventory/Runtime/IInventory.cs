@@ -1,6 +1,6 @@
 namespace JuhaKurisu.PopoTools.InventorySystem
 {
-    public interface IInventory<ItemType>
+    public interface IInventory<TItem>
     {
 
     }
