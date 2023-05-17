@@ -84,6 +84,11 @@ namespace JuhaKurisu.PopoTools.InventorySystem
             return SubtractItems(1);
         }
 
+        public bool TryAddItem()
+        {
+            return AddItems(1) == 0;
+        }
+
         public void MaintainConsistency()
         {
             // 数が0より小さい、もしくは同じ場合Defaultにする
