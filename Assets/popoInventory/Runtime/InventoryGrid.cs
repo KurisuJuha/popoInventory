@@ -34,7 +34,7 @@ namespace JuhaKurisu.PopoTools.InventorySystem
         ///     グリッドにアイテムを足す
         /// </summary>
         /// <param name="addAmount">足す数</param>
-        /// <returns>足せなかった数</returns>
+        /// <returns>足せなかった余った数</returns>
         public int AddItems(int addAmount)
         {
             // 許容値
@@ -58,7 +58,7 @@ namespace JuhaKurisu.PopoTools.InventorySystem
         ///     グリッドからアイテムを引く
         /// </summary>
         /// <param name="subtractAmount">引く数</param>
-        /// <returns>引けなかった数</returns>
+        /// <returns>引けなかった余った数</returns>
         public int SubtractItems(int subtractAmount)
         {
             if (amount < subtractAmount)
