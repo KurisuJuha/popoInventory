@@ -21,7 +21,8 @@ public class InventoryTest : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)) grid.SubtractItem();
+        if (Input.GetKeyDown(KeyCode.LeftShift)) grid.SubtractItem();
+        if (Input.GetKeyDown(KeyCode.RightShift)) grid.AddItem();
         Debug.Log(grid.amount);
     }
 }

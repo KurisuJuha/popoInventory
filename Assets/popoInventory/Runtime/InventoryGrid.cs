@@ -39,9 +39,6 @@ namespace JuhaKurisu.PopoTools.InventorySystem
         {
             // 許容値
             var limit = maxAmount - amount;
-            Debug.Log($"maxAmount : {maxAmount}");
-            Debug.Log($"limit : {limit}");
-            Debug.Log($"addAmount : {addAmount}");
 
             if (addAmount > limit)
             {
@@ -54,7 +51,6 @@ namespace JuhaKurisu.PopoTools.InventorySystem
             // 許容値の方が大きい場合
             amount += addAmount;
             MaintainConsistency();
-            Debug.Log(amount);
             return 0;
         }
 
