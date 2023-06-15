@@ -8,4 +8,8 @@
         <RootNamespace>JuhaKurisu.PopoTools.InventorySystem</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="System.Reactive" Version="6.0.1-preview.1" />
+    </ItemGroup>
+
 </Project>

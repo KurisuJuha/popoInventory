@@ -1,6 +1,6 @@
 ﻿namespace JuhaKurisu.PopoTools.InventorySystem;
 
-public class Inventory<TSettings, TItem> : IInventory<TSettings, TItem>
+public sealed class Inventory<TSettings, TItem> : IInventory<TSettings, TItem>
     where TSettings : IInventorySettings<TSettings, TItem>
 {
     public Inventory(TSettings settings)
@@ -9,4 +9,8 @@ public class Inventory<TSettings, TItem> : IInventory<TSettings, TItem>
     }
 
     public TSettings Settings { get; }
+
+    public void Dispose()
+    {
+    }
 }
