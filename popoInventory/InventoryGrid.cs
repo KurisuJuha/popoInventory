@@ -15,10 +15,16 @@ public class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, TItem>
     public TSettings Settings { get; }
     public IReadOnlyCollection<TItem> Items { get; }
 
-    public bool TryAdd(TItem item)
+    public bool IsAddable(TItem item)
     {
         if (_items.Count >= Settings.GetMaxItemAmountInGrid(this)) return false;
         if (_items.Count >= Settings.GetMaxItemAmountInItem(item)) return false;
+        return true;
+    }
+
+    public bool TryAdd(TItem item)
+    {
+        if (!IsAddable(item)) return false;
 
         _items.Add(item);
 

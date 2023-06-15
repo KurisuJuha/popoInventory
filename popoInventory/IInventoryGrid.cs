@@ -5,5 +5,6 @@ public interface IInventoryGrid<out TSettings, TItem>
 {
     TSettings Settings { get; }
     IReadOnlyCollection<TItem> Items { get; }
+    bool IsAddable(TItem item);
     bool TryAdd(TItem item);
 }
