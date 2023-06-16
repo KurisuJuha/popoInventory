@@ -22,16 +22,16 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
     public TSettings Settings { get; }
     public IReadOnlyCollection<TItem> Items { get; }
 
-    public bool IsAddable(TItem item)
+    public bool IsAddableItem(TItem item)
     {
         if (_items.Count >= _maxAmount) return false;
         if (_items.Count >= Settings.GetMaxItemAmountInItem(item)) return false;
         return true;
     }
 
-    public bool TryAdd(TItem item)
+    public bool TryAddItem(TItem item)
     {
-        if (!IsAddable(item)) return false;
+        if (!IsAddableItem(item)) return false;
 
         _items.Add(item);
         _onAdded.OnNext(this);
@@ -39,14 +39,14 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
         return true;
     }
 
-    public bool IsSubtractable()
+    public bool IsSubtractableItem()
     {
         return _items.Count > 0;
     }
 
-    public bool TrySubtract(out TItem item)
+    public bool TrySubtractItem(out TItem item)
     {
-        if (!IsSubtractable())
+        if (!IsSubtractableItem())
         {
             item = Settings.GetEmptyItem();
             return false;

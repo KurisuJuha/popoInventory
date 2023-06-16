@@ -6,9 +6,9 @@ public interface IInventoryGrid<out TSettings, TItem> : IDisposable
     IObservable<IInventoryGrid<TSettings, TItem>> OnAdded { get; }
     TSettings Settings { get; }
     IReadOnlyCollection<TItem> Items { get; }
-    bool IsAddable(TItem item);
-    bool TryAdd(TItem item);
-    bool IsSubtractable();
-    bool TrySubtract(out TItem item);
+    bool IsAddableItem(TItem item);
+    bool TryAddItem(TItem item);
+    bool IsSubtractableItem();
+    bool TrySubtractItem(out TItem item);
     
 }
