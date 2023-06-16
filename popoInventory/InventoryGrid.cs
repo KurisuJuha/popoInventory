@@ -24,6 +24,8 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
 
     public bool IsAddableItem(TItem item)
     {
+        if (_items.Count != 0 && !Settings.AreSameItem(item, _items[0])) return false;
+
         return _items.Count < GetMaxAmount();
     }
 
@@ -57,6 +59,8 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
 
     public bool IsAddableItems(ICollection<TItem> items)
     {
+        if (_items.Count != 0 && items.Any(item => !Settings.AreSameItem(item, _items[0]))) return false;
+
         return GetMaxAmount() - _items.Count >= items.Count;
     }
 
