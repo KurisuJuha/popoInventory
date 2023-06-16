@@ -1,7 +1,8 @@
 ﻿namespace JuhaKurisu.PopoTools.InventorySystem;
 
-public interface IInventory<out TSettings, TItem> : IDisposable
+public interface IInventory<TSettings, TItem> : IDisposable
     where TSettings : IInventorySettings<TSettings, TItem>
 {
+    IReadOnlyCollection<IInventoryGrid<TSettings, TItem>> Grids { get; }
     TSettings Settings { get; }
 }
