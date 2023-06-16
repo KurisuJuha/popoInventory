@@ -5,9 +5,9 @@ namespace JuhaKurisu.PopoTools.InventorySystem;
 public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, TItem>
     where TSettings : IInventorySettings<TSettings, TItem>
 {
-    private readonly List<TItem> _items;
     private readonly int _maxAmountInGrid;
     private readonly Subject<IInventoryGrid<TSettings, TItem>> _onAdded;
+    private List<TItem> _items;
 
     public InventoryGrid(TSettings settings, int maxAmountInGrid)
     {
@@ -83,6 +83,18 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
 
         _items.RemoveRange(0, amount);
         return true;
+    }
+
+    public void Exchange(IInventoryGrid<TSettings, TItem> otherGrid)
+    {
+        var buffer = _items;
+        SetItems(otherGrid.Items);
+        otherGrid.SetItems(buffer);
+    }
+
+    public void SetItems(IEnumerable<TItem> items)
+    {
+        _items = items.ToList();
     }
 
     public void Dispose()
