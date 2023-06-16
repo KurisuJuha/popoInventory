@@ -6,19 +6,23 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
     where TSettings : IInventorySettings<TSettings, TItem>
 {
     private readonly int _maxAmountInGrid;
-    private readonly Subject<IInventoryGrid<TSettings, TItem>> _onAdded;
+    private readonly Subject<(IInventoryGrid<TSettings, TItem> grid, int index, TItem item)> _onAdded;
+    private readonly Subject<(IInventoryGrid<TSettings, TItem> grid, int index, TItem item)> _onSubtracted;
     private List<TItem> _items;
 
     public InventoryGrid(TSettings settings, int maxAmountInGrid)
     {
         _maxAmountInGrid = maxAmountInGrid;
-        _onAdded = new Subject<IInventoryGrid<TSettings, TItem>>();
+        _onAdded = new Subject<(IInventoryGrid<TSettings, TItem> grid, int index, TItem item)>();
+        _onSubtracted = new Subject<(IInventoryGrid<TSettings, TItem> grid, int index, TItem item)>();
         _items = new List<TItem>();
         Settings = settings;
         Items = _items.AsReadOnly();
     }
 
-    public IObservable<IInventoryGrid<TSettings, TItem>> OnAdded => _onAdded;
+    public IObservable<(IInventoryGrid<TSettings, TItem> grid, int index, TItem item)> OnAdded => _onAdded;
+    public IObservable<(IInventoryGrid<TSettings, TItem> grid, int index, TItem item)> OnSubtracted => _onSubtracted;
+
     public TSettings Settings { get; }
     public IReadOnlyCollection<TItem> Items { get; }
 
@@ -34,7 +38,7 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
         if (!IsAddableItem(item)) return false;
 
         _items.Add(item);
-        _onAdded.OnNext(this);
+        _onAdded.OnNext((this, _items.Count - 1, item));
 
         return true;
     }
@@ -54,6 +58,8 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
 
         item = _items.Last();
         _items.RemoveAt(0);
+        _onSubtracted.OnNext((this, _items.Count, item));
+
         return true;
     }
 
@@ -69,6 +75,14 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
         if (!IsAddableItems(items)) return false;
 
         _items.AddRange(items);
+
+        var i = 0;
+        foreach (var item in items)
+        {
+            _onAdded.OnNext((this, _items.Count - items.Count + i, item));
+            i++;
+        }
+
         return true;
     }
 
@@ -77,11 +91,22 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
         return _items.Count >= amount;
     }
 
-    public bool TrySubtractItems(int amount, ICollection<TItem> subtractedItems)
+    public bool TrySubtractItems(int amount, out ICollection<TItem> subtractedItems)
     {
-        if (!IsSubtractableItems(amount)) return false;
+        if (!IsSubtractableItems(amount))
+        {
+            subtractedItems = Array.Empty<TItem>();
+            return false;
+        }
+
+        var ret = new TItem[amount];
+        _items.CopyTo(ret, 0);
+        subtractedItems = ret;
 
         _items.RemoveRange(0, amount);
+
+        for (var i = 0; i < amount; i++) _onSubtracted.OnNext((this, i, ret[i]));
+
         return true;
     }
 
@@ -100,6 +125,7 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
     public void Dispose()
     {
         _onAdded.Dispose();
+        _onSubtracted.Dispose();
     }
 
     private int GetMaxAmount()
