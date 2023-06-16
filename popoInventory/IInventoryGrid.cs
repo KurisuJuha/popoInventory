@@ -8,4 +8,7 @@ public interface IInventoryGrid<out TSettings, TItem> : IDisposable
     IReadOnlyCollection<TItem> Items { get; }
     bool IsAddable(TItem item);
     bool TryAdd(TItem item);
+    bool IsSubtractable();
+    bool TrySubtract(out TItem item);
+    
 }

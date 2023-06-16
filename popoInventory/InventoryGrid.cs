@@ -39,6 +39,24 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
         return true;
     }
 
+    public bool IsSubtractable()
+    {
+        return _items.Count > 0;
+    }
+
+    public bool TrySubtract(out TItem item)
+    {
+        if (!IsSubtractable())
+        {
+            item = Settings.GetEmptyItem();
+            return false;
+        }
+
+        item = _items.Last();
+        _items.RemoveAt(_items.Count - 1);
+        return true;
+    }
+
     public void Dispose()
     {
         _onAdded.Dispose();
