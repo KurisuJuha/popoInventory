@@ -6,12 +6,12 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
     where TSettings : IInventorySettings<TSettings, TItem>
 {
     private readonly List<TItem> _items;
-    private readonly int _maxAmount;
+    private readonly int _maxAmountInGrid;
     private readonly Subject<IInventoryGrid<TSettings, TItem>> _onAdded;
 
-    public InventoryGrid(TSettings settings, int maxAmount)
+    public InventoryGrid(TSettings settings, int maxAmountInGrid)
     {
-        _maxAmount = maxAmount;
+        _maxAmountInGrid = maxAmountInGrid;
         _onAdded = new Subject<IInventoryGrid<TSettings, TItem>>();
         _items = new List<TItem>();
         Settings = settings;
@@ -24,9 +24,7 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
 
     public bool IsAddableItem(TItem item)
     {
-        if (_items.Count >= _maxAmount) return false;
-        if (_items.Count >= Settings.GetMaxItemAmountInItem(item)) return false;
-        return true;
+        return _items.Count < GetMaxAmount();
     }
 
     public bool TryAddItem(TItem item)
@@ -53,12 +51,45 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
         }
 
         item = _items.Last();
-        _items.RemoveAt(_items.Count - 1);
+        _items.RemoveAt(0);
+        return true;
+    }
+
+    public bool IsAddableItems(ICollection<TItem> items)
+    {
+        return GetMaxAmount() - _items.Count >= items.Count;
+    }
+
+    public bool TryAddItems(ICollection<TItem> items)
+    {
+        if (!IsAddableItems(items)) return false;
+
+        _items.AddRange(items);
+        return true;
+    }
+
+    public bool IsSubtractableItems(int amount)
+    {
+        return _items.Count >= amount;
+    }
+
+    public bool TrySubtractItems(int amount, ICollection<TItem> subtractedItems)
+    {
+        if (!IsSubtractableItems(amount)) return false;
+
+        _items.RemoveRange(0, amount);
         return true;
     }
 
     public void Dispose()
     {
         _onAdded.Dispose();
+    }
+
+    private int GetMaxAmount()
+    {
+        return _items.Count == 0
+            ? _maxAmountInGrid
+            : Math.Min(_maxAmountInGrid, Settings.GetMaxItemAmountInItem(_items.First()));
     }
 }
