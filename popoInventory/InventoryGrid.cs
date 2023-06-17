@@ -62,11 +62,11 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
         return _items.Count > 0;
     }
 
-    public bool TrySubtractItem(out TItem item)
+    public bool TrySubtractItem(out TItem? item)
     {
         if (!IsSubtractableItem())
         {
-            item = Settings.GetEmptyItem();
+            item = default;
             return false;
         }
 

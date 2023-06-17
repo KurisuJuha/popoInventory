@@ -25,7 +25,7 @@ public interface IInventoryGrid<TSettings, TItem> : IDisposable
     bool IsAddableItem(TItem item);
     bool TryAddItem(TItem item);
     bool IsSubtractableItem();
-    bool TrySubtractItem(out TItem item);
+    bool TrySubtractItem(out TItem? item);
     bool IsAddableItems(ICollection<TItem> items);
     bool TryAddItems(ICollection<TItem> items);
     bool IsSubtractableItems(int amount);
