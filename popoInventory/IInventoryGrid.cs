@@ -5,10 +5,10 @@ namespace JuhaKurisu.PopoTools.InventorySystem;
 public interface IInventoryGrid<TSettings, TItem> : IDisposable
     where TSettings : IInventorySettings<TSettings, TItem>
 {
-    public IObservable<(IInventoryGrid<TSettings, TItem> grid, int index, TItem item)> OnAdded =>
+    public IObservable<(IInventoryGrid<TSettings, TItem> grid, int index, TItem item)> OnAddedItem =>
         OnAddedItems.SelectMany(data => data.items.Select((item, i) => (data.grid, data.startIndex + i, item)));
 
-    public IObservable<(IInventoryGrid<TSettings, TItem> grid, int index, TItem item)> OnSubtracted =>
+    public IObservable<(IInventoryGrid<TSettings, TItem> grid, int index, TItem item)> OnSubtractedItem =>
         OnSubtractedItems.SelectMany(data => data.items.Select((item, i) => (data.grid, data.startIndex + i, item)));
 
     IObservable<(IInventoryGrid<TSettings, TItem> grid, int startIndex, int count, TItem[] items)> OnAddedItems { get; }
