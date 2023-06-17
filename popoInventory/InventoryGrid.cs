@@ -10,6 +10,8 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
     private readonly Subject<(IInventoryGrid<TSettings, TItem> grid, int startIndex, int count, TItem[] items)>
         _onAddedItems;
 
+    private readonly Subject<IInventoryGrid<TSettings, TItem>> _onExchanged;
+
     private readonly Subject<(IInventoryGrid<TSettings, TItem> grid, int startIndex, int count, TItem[] items)>
         _onSubtractedItems;
 
@@ -22,6 +24,7 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
             new Subject<(IInventoryGrid<TSettings, TItem> grid, int startIndex, int count, TItem[] items)>();
         _onSubtractedItems =
             new Subject<(IInventoryGrid<TSettings, TItem> grid, int startIndex, int count, TItem[] items)>();
+        _onExchanged = new Subject<IInventoryGrid<TSettings, TItem>>();
         _items = new List<TItem>();
         Settings = settings;
         Items = _items.AsReadOnly();
@@ -32,6 +35,8 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
 
     public IObservable<(IInventoryGrid<TSettings, TItem> grid, int startIndex, int count, TItem[] items)>
         OnSubtractedItems => _onSubtractedItems;
+
+    public IObservable<IInventoryGrid<TSettings, TItem>> OnExchanged => _onExchanged;
 
     public TSettings Settings { get; }
     public IReadOnlyCollection<TItem> Items { get; }
@@ -120,6 +125,8 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
         var buffer = _items;
         SetItems(otherGrid.Items);
         otherGrid.SetItems(buffer);
+
+        _onExchanged.OnNext(otherGrid);
     }
 
     public void SetItems(IEnumerable<TItem> items)
@@ -131,6 +138,7 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
     {
         _onAddedItems.Dispose();
         _onSubtractedItems.Dispose();
+        _onExchanged.Dispose();
     }
 
     private int GetMaxAmount()

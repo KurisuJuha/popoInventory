@@ -18,6 +18,8 @@ public interface IInventoryGrid<TSettings, TItem> : IDisposable
         get;
     }
 
+    IObservable<IInventoryGrid<TSettings, TItem>> OnExchanged { get; }
+
     TSettings Settings { get; }
     IReadOnlyCollection<TItem> Items { get; }
     bool IsAddableItem(TItem item);
