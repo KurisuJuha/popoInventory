@@ -117,6 +117,24 @@ public class InventoryGridTests
         });
     }
 
+    [Test]
+    public void IsExchangeable_許容値より大きい量を交換できるか_交換できないと判断する()
+    {
+        var settings = new TestInventorySettings(100, new TestItem(""));
+        IInventoryGrid<TestInventorySettings, TestItem> grid1 =
+            new InventoryGrid<TestInventorySettings, TestItem>(settings, 10);
+        IInventoryGrid<TestInventorySettings, TestItem> grid2 =
+            new InventoryGrid<TestInventorySettings, TestItem>(settings, 40);
+        Assert.Multiple(() =>
+        {
+            Assert.That(grid1.TryAddItems(Enumerable.Range(0, 10).Select(i => new TestItem("item")).ToArray()),
+                Is.True);
+            Assert.That(grid2.TryAddItems(Enumerable.Range(0, 40).Select(i => new TestItem("item")).ToArray()),
+                Is.True);
+            Assert.That(grid1.IsExchangeable(grid2), Is.False);
+        });
+    }
+
     [SetUp]
     public void Setup()
     {
