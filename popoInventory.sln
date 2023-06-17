@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "popoInventory", "popoInventory\popoInventory.csproj", "{143B6114-50E4-4D2B-855E-2515BD9B5583}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{76866F9A-2839-4066-834E-1B695DFB0839}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{143B6114-50E4-4D2B-855E-2515BD9B5583}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{143B6114-50E4-4D2B-855E-2515BD9B5583}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{143B6114-50E4-4D2B-855E-2515BD9B5583}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76866F9A-2839-4066-834E-1B695DFB0839}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76866F9A-2839-4066-834E-1B695DFB0839}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76866F9A-2839-4066-834E-1B695DFB0839}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76866F9A-2839-4066-834E-1B695DFB0839}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
