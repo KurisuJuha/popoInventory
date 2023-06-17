@@ -1,10 +1,23 @@
-﻿namespace JuhaKurisu.PopoTools.InventorySystem;
+﻿using System.Reactive.Linq;
+
+namespace JuhaKurisu.PopoTools.InventorySystem;
 
 public interface IInventoryGrid<TSettings, TItem> : IDisposable
     where TSettings : IInventorySettings<TSettings, TItem>
 {
-    IObservable<(IInventoryGrid<TSettings, TItem> grid, int index, TItem item)> OnAdded { get; }
-    IObservable<(IInventoryGrid<TSettings, TItem> grid, int index, TItem item)> OnSubtracted { get; }
+    public IObservable<(IInventoryGrid<TSettings, TItem> grid, int index, TItem item)> OnAdded =>
+        OnAddedItems.SelectMany(data => data.items.Select((item, i) => (data.grid, data.startIndex + i, item)));
+
+    public IObservable<(IInventoryGrid<TSettings, TItem> grid, int index, TItem item)> OnSubtracted =>
+        OnSubtractedItems.SelectMany(data => data.items.Select((item, i) => (data.grid, data.startIndex + i, item)));
+
+    IObservable<(IInventoryGrid<TSettings, TItem> grid, int startIndex, int count, TItem[] items)> OnAddedItems { get; }
+
+    IObservable<(IInventoryGrid<TSettings, TItem> grid, int startIndex, int count, TItem[] items)> OnSubtractedItems
+    {
+        get;
+    }
+
     TSettings Settings { get; }
     IReadOnlyCollection<TItem> Items { get; }
     bool IsAddableItem(TItem item);
