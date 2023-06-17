@@ -21,6 +21,7 @@ public interface IInventoryGrid<TSettings, TItem> : IDisposable
     IObservable<IInventoryGrid<TSettings, TItem>> OnExchanged { get; }
     TSettings Settings { get; }
     IReadOnlyCollection<TItem> Items { get; }
+    int MaxAmountInGrid { get; }
     bool IsAddableItem(TItem item);
     bool TryAddItem(TItem item);
     bool IsSubtractableItem();
@@ -29,6 +30,7 @@ public interface IInventoryGrid<TSettings, TItem> : IDisposable
     bool TryAddItems(ICollection<TItem> items);
     bool IsSubtractableItems(int amount);
     bool TrySubtractItems(int amount, out ICollection<TItem> subtractedItems);
-    void Exchange(IInventoryGrid<TSettings, TItem> otherGrid);
+    bool IsExchangeable(IInventoryGrid<TSettings, TItem> otherGrid);
+    bool TryExchange(IInventoryGrid<TSettings, TItem> otherGrid);
     void SetItems(IEnumerable<TItem> items);
 }

@@ -5,8 +5,6 @@ namespace JuhaKurisu.PopoTools.InventorySystem;
 public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, TItem>
     where TSettings : IInventorySettings<TItem>
 {
-    private readonly int _maxAmountInGrid;
-
     private readonly Subject<(IInventoryGrid<TSettings, TItem> grid, int startIndex, int count, TItem[] items)>
         _onAddedItems;
 
@@ -19,7 +17,7 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
 
     public InventoryGrid(TSettings settings, int maxAmountInGrid)
     {
-        _maxAmountInGrid = maxAmountInGrid;
+        MaxAmountInGrid = maxAmountInGrid;
         _onAddedItems =
             new Subject<(IInventoryGrid<TSettings, TItem> grid, int startIndex, int count, TItem[] items)>();
         _onSubtractedItems =
@@ -40,6 +38,7 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
 
     public TSettings Settings { get; }
     public IReadOnlyCollection<TItem> Items { get; }
+    public int MaxAmountInGrid { get; }
 
     public bool IsAddableItem(TItem item)
     {
@@ -120,13 +119,22 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
         return true;
     }
 
-    public void Exchange(IInventoryGrid<TSettings, TItem> otherGrid)
+    public bool IsExchangeable(IInventoryGrid<TSettings, TItem> otherGrid)
     {
+        if (MaxAmountInGrid < otherGrid.Items.Count) return false;
+        return otherGrid.MaxAmountInGrid >= _items.Count;
+    }
+
+    public bool TryExchange(IInventoryGrid<TSettings, TItem> otherGrid)
+    {
+        if (!IsExchangeable(otherGrid)) return false;
+
         var buffer = _items;
         SetItems(otherGrid.Items);
         otherGrid.SetItems(buffer);
 
         _onExchanged.OnNext(otherGrid);
+        return true;
     }
 
     public void SetItems(IEnumerable<TItem> items)
@@ -144,7 +152,7 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
     private int GetMaxAmount()
     {
         return _items.Count == 0
-            ? _maxAmountInGrid
-            : Math.Min(_maxAmountInGrid, Settings.GetMaxItemAmountInItem(_items.First()));
+            ? MaxAmountInGrid
+            : Math.Min(MaxAmountInGrid, Settings.GetMaxItemAmountInItem(_items.First()));
     }
 }
