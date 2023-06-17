@@ -135,6 +135,19 @@ public class InventoryGridTests
         });
     }
 
+    [Test]
+    public void TryExchange_TryExchangeの返り値とIsExchangeableの返り値が同じであるかどうか_同じ()
+    {
+        CreateInventoryAndGrid(out var inventorySettings, out var grid);
+        var otherGrid = new InventoryGrid<TestInventorySettings, TestItem>(inventorySettings, 100);
+
+        grid.TryAddItems(Enumerable.Range(0, 40).Select(i => new TestItem("item")).ToArray());
+        otherGrid.TryAddItems(Enumerable.Range(0, 40).Select(i => new TestItem("item")).ToArray());
+
+        var isExchangeable = grid.IsExchangeable(otherGrid);
+        Assert.That(grid.TryExchange(otherGrid), Is.EqualTo(isExchangeable));
+    }
+
     [SetUp]
     public void Setup()
     {
