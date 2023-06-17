@@ -3,7 +3,7 @@
 namespace JuhaKurisu.PopoTools.InventorySystem;
 
 public sealed class Inventory<TSettings, TItem> : IInventory<TSettings, TItem>
-    where TSettings : IInventorySettings<TSettings, TItem>
+    where TSettings : IInventorySettings<TItem>
 {
     public Inventory(TSettings settings, int size)
     {
