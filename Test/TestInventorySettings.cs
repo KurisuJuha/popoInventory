@@ -2,7 +2,7 @@
 
 namespace Test;
 
-public class TestInventorySettings : IInventorySettings<TestInventorySettings, TestItem>
+public class TestInventorySettings : IInventorySettings<TestItem>
 {
     private readonly TestItem _emptyItem;
     private readonly int _maxItemAmountInItem;

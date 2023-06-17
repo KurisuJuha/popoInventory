@@ -3,7 +3,7 @@
 namespace JuhaKurisu.PopoTools.InventorySystem;
 
 public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, TItem>
-    where TSettings : IInventorySettings<TSettings, TItem>
+    where TSettings : IInventorySettings<TItem>
 {
     private readonly int _maxAmountInGrid;
 

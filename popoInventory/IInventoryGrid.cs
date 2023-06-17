@@ -3,7 +3,7 @@
 namespace JuhaKurisu.PopoTools.InventorySystem;
 
 public interface IInventoryGrid<TSettings, TItem> : IDisposable
-    where TSettings : IInventorySettings<TSettings, TItem>
+    where TSettings : IInventorySettings<TItem>
 {
     public IObservable<(IInventoryGrid<TSettings, TItem> grid, int index, TItem item)> OnAddedItem =>
         OnAddedItems.SelectMany(data => data.items.Select((item, i) => (data.grid, data.startIndex + i, item)));
