@@ -115,6 +115,13 @@ public sealed class InventoryGrid<TSettings, TItem> : IInventoryGrid<TSettings, 
         return true;
     }
 
+    public void Exchange(IInventoryGrid<TSettings, TItem> otherGrid)
+    {
+        var buffer = _items;
+        SetItems(otherGrid.Items);
+        otherGrid.SetItems(buffer);
+    }
+
     public void SetItems(IEnumerable<TItem> items)
     {
         _items = items.ToList();

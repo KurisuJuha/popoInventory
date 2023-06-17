@@ -28,12 +28,6 @@ public interface IInventoryGrid<TSettings, TItem> : IDisposable
     bool TryAddItems(ICollection<TItem> items);
     bool IsSubtractableItems(int amount);
     bool TrySubtractItems(int amount, out ICollection<TItem> subtractedItems);
+    void Exchange(IInventoryGrid<TSettings, TItem> otherGrid);
     void SetItems(IEnumerable<TItem> items);
-
-    void Exchange(IInventoryGrid<TSettings, TItem> otherGrid)
-    {
-        var buffer = Items;
-        SetItems(otherGrid.Items);
-        otherGrid.SetItems(buffer);
-    }
 }
